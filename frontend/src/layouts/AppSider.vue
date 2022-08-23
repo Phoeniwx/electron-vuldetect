@@ -35,12 +35,6 @@ export default {
           pageName: 'BaseIndex',
           params: {},
         },
-        'menu_2' : {
-          icon: 'profile',
-          title: '白盒',
-          pageName: 'WhiteIndex',
-          params: {},
-        }
       }
     };
   },
