@@ -1,6 +1,6 @@
 'use strict';
 
-const {Tray, Menu} = require('electron');
+const {Tray, Menu, app} = require('electron');
 const path = require('path');
 
 /**
@@ -32,6 +32,7 @@ module.exports = {
         label: '退出',
         click: function () {
           eeApp.appQuit();
+          app.exit();
         }
       }
     ]

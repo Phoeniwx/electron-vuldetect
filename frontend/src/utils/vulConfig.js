@@ -10,7 +10,7 @@ const vulOptions = {
     '验证码过于简单': ['SMS_BRUTE_FORCE_ATTACK', 'SEARCH_CAPIC'],
     '验证码长度可控': ['CONTROL_CAPTCHA_ATTACK'],
     '验证码可识别': ['SEARCH_CAPIC'],
-    '验证码重复利用': ['SMS_REPEAT_ATTACK'],
+    '验证码重复利用': ['CAPTCHA_REPEAT_ATTACK'],
     '邮件验证码安全': ['INTERCEPT_UNBIND'],
     '无验证码': ['NO_CAPTCHA_CHECK'],
     '图形验证码可绕过': ['CAPTCHA_BYPASS', 'SEARCH_CAPIC', 'CONTROL_CAPTCHA_ATTACK'],
