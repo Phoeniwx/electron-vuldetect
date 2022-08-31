@@ -1,102 +1,102 @@
 <template>
   <div id="app-base-file">
-    <div class="one-block-1">
-      <span> 1. 目标站点信息 </span>
-    </div>
     <div class="one-block-2">
-      <a-space style="margin: 5px">
+      <a-space style="margin: 5px; font-weight: bold">
         <span>网站入口</span>
+        <a-input v-model="url" placeholder="URL">
+          <a-select
+            slot="addonBefore"
+            v-model="schema"
+            default-value="https://"
+            style="width: 80px"
+          >
+            <a-select-option value="http://"> Http:// </a-select-option>
+            <a-select-option value="https://"> Https:// </a-select-option>
+          </a-select>
+        </a-input>
       </a-space>
-      <div />
-      <a-input v-model="url" placeholder="URL" style="width: 460px">
-        <a-select
-          slot="addonBefore"
-          v-model="schema"
-          default-value="https://"
-          style="width: 80px"
-        >
-          <a-select-option value="http://"> Http:// </a-select-option>
-          <a-select-option value="https://"> Https:// </a-select-option>
-        </a-select>
-      </a-input>
     </div>
 
-    <div class="one-block-2" style="width: 600px">
-      <a-space style="margin: 5px">
+    <div class="one-block-2">
+      <a-space style="margin: 5px; font-weight: bold">
+        爬虫线程  
+        <a-input-number v-model="threads" :min="1" :max="100" style="width:60px"/>
+        送信间隔
+        <a-input-number v-model="interval" :min="0" :max="100" style="width:60px"/>
+      </a-space>
+    </div>
+
+    <div class="one-block-2">
+      <a-space style="margin: 5px; font-weight: bold">
         <span>用户密码</span>
         <a-switch @change="authChange" />
+        <a-form layout="inline" :form="form" @submit="handleSubmit">
+          <a-form-item
+            :validate-status="userNameError() ? 'error' : ''"
+            :help="userNameError() || ''"
+          >
+            <a-input
+              v-decorator="[
+                'userName',
+                { rules: [{ required: true, message: '请输入用户名' }] },
+              ]"
+              :disabled="noAuth"
+              placeholder="用户名"
+            >
+              <a-icon
+                slot="prefix"
+                type="user"
+                style="color: rgba(0, 0, 0, 0.25)"
+              />
+            </a-input>
+          </a-form-item>
+          <a-form-item
+            :validate-status="passwordError() ? 'error' : ''"
+            :help="passwordError() || ''"
+          >
+            <a-input
+              v-decorator="[
+                'password',
+                { rules: [{ required: true, message: '请输入密码' }] },
+              ]"
+              :disabled="noAuth"
+              type="password"
+              placeholder="密码"
+            >
+              <a-icon
+                slot="prefix"
+                type="lock"
+                style="color: rgba(0, 0, 0, 0.25)"
+              />
+            </a-input>
+          </a-form-item>
+          <a-form-item>
+            <a-button
+              type="primary"
+              html-type="submit"
+              :disabled="noAuth || hasErrors(form.getFieldsError())"
+            >
+              提交
+            </a-button>
+          </a-form-item>
+        </a-form>
       </a-space>
-
-      <a-form layout="inline" :form="form" @submit="handleSubmit">
-        <a-form-item
-          :validate-status="userNameError() ? 'error' : ''"
-          :help="userNameError() || ''"
-        >
-          <a-input
-            v-decorator="[
-              'userName',
-              { rules: [{ required: true, message: '请输入用户名' }] },
-            ]"
-            :disabled="noAuth"
-            placeholder="用户名"
-          >
-            <a-icon
-              slot="prefix"
-              type="user"
-              style="color: rgba(0, 0, 0, 0.25)"
-            />
-          </a-input>
-        </a-form-item>
-        <a-form-item
-          :validate-status="passwordError() ? 'error' : ''"
-          :help="passwordError() || ''"
-        >
-          <a-input
-            v-decorator="[
-              'password',
-              { rules: [{ required: true, message: '请输入密码' }] },
-            ]"
-            :disabled="noAuth"
-            type="password"
-            placeholder="密码"
-          >
-            <a-icon
-              slot="prefix"
-              type="lock"
-              style="color: rgba(0, 0, 0, 0.25)"
-            />
-          </a-input>
-        </a-form-item>
-        <a-form-item>
-          <a-button
-            type="primary"
-            html-type="submit"
-            :disabled="noAuth || hasErrors(form.getFieldsError())"
-          >
-            提交
-          </a-button>
-        </a-form-item>
-      </a-form>
     </div>
 
     <div class="one-block-2">
-      <a-space style="margin: 5px">
+      <a-space style="margin: 5px; font-weight: bold">
         <span>批量导入URL</span>
         <a-switch @change="csvChange" />
+        CSV文件
+        <a-input
+          v-model="csv_file"
+          :disabled="!csvFlag"
+          placeholder="xxx.csv"
+        ></a-input>
+        <a-button :disabled="!csvFlag" @click="selectFile"> 选择文件 </a-button>
       </a-space>
-      CSV文件
-      <a-input
-        v-model="csv_file"
-        :disabled="!csvFlag"
-        placeholder="xxx.csv"
-        style="width: 360px"
-      ></a-input>
-      <a-button :disabled="!csvFlag" @click="selectFile"> 选择文件 </a-button>
     </div>
 
-    <div class="one-block-1">
-      <span> 2. 测试模式 </span>
-    </div>
     <div class="one-block-2" style="width: 720px">
       <a-row :gutter="[0, 16]">
         <a-col :span="8">
@@ -167,10 +167,6 @@
       </a-row>
     </div>
 
-    <div class="one-block-1">
-      <span> 3. 保存配置 </span>
-    </div>
-
     <div class="one-block-2">
       <a-button type="primary" icon="save" @click="saveConfig">
         保存配置
@@ -214,9 +210,9 @@ const otherVul = [
   "密码重置无需原密码*",
   "会话令牌写入URL",
   "任意文件下载",
-  "文件上传漏洞*",
-  "越权漏洞",
-  "未授权访问",
+  // "文件上传漏洞*",
+  // "越权漏洞",
+  // "未授权访问",
   "重放",
 ];
 
@@ -236,7 +232,11 @@ export default {
         password: "",
         csv_file: "",
         modules: [],
+        threads: 8,
+        interval: 0
       },
+      threads: 8,
+      interval: 0,
       smsVul,
       captchaVul,
       otherVul,
@@ -300,7 +300,8 @@ export default {
         this.$message.error("请输入目标网址");
         return;
       }
-
+      this.target_info.threads = this.threads;
+      this.target_info.interval = this.interval;
       this.target_info.csv_file = this.csv_file;
       this.target_info.url = httpRegx.test(this.url)
         ? this.url
@@ -361,6 +362,7 @@ export default {
   }
   .one-block-2 {
     padding-top: 10px;
+    width: 720px;
   }
   .footer {
     padding-top: 10px;
