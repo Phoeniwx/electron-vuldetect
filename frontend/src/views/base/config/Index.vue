@@ -19,12 +19,12 @@
 
     <div class="one-block-2">
       <a-space style="margin: 5px; font-weight: bold">
-        爬虫线程  
-        <a-input-number v-model="threads" :min="1" :max="100" style="width:60px"/>
-        送信间隔
-        <a-input-number v-model="interval" :min="0" :max="100" style="width:60px"/>
-        单独导出报告
-        <a-switch @change="seperateChange" />
+        <span>爬虫线程  
+        <a-input-number v-model="threads" :min="1" :max="100" style="width:60px"/></span>
+        <span>送信间隔
+        <a-input-number v-model="interval" :min="0" :max="100" style="width:60px"/>s</span>
+        <span>单独导出报告
+        <a-switch @change="seperateChange" /></span>
       </a-space>
     </div>
 
