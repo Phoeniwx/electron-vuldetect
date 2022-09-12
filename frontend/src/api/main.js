@@ -30,6 +30,7 @@ const ipcApiRoute = {
   listReports: 'controller.example.listReports',
   openFile: 'controller.example.openFile',
   openFolder: 'controller.example.openFolder',
+  copyFile: 'controller.example.copyFile',
   execJvdetector: 'controller.detector.execJvdetector',
   listWhiteReports: 'controller.detector.listWhiteReports',
   ipcShowTip: 'controller.backend.ipcShowTip',

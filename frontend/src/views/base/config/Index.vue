@@ -96,6 +96,7 @@
           placeholder="xxx.csv"
         ></a-input>
         <a-button :disabled="!csvFlag" @click="selectFile"> 选择文件 </a-button>
+        <a-button :disabled="!csvFlag" @click="downloadExapmle"> 模板下载 </a-button>
       </a-space>
     </div>
 
@@ -301,6 +302,19 @@ export default {
       this.$ipcCall(ipcApiRoute.selectFile, "").then((r) => {
         this.csv_file = r;
         this.$message.info(r);
+      });
+    },
+    downloadExapmle(){
+      let args = [".\\LogicDetector\\example.csv",""]
+      this.$ipcCall(ipcApiRoute.selectFolder, "").then((r) => {
+        args[1] = r+"\\example.csv";
+        this.$ipcCall(ipcApiRoute.copyFile, args).then((r) => {
+          if (r == true){
+            this.$message.info("文件已下载到指定目录！");
+          }else{
+            this.$message.error("文件下载失败！");
+          }
+        });
       });
     },
     saveConfig() {
