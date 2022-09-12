@@ -572,6 +572,23 @@ class ExampleController extends Controller {
     return true;
   }
 
+  /***
+   * 复制资源文件到指定目录
+   * args[0]源文件路径
+   * args[1]目标文件路径
+   */
+  copyFile(args){
+    let ori_ = path.join(Utils.getExtraResourcesDir(), args[0]);
+    let success = true;
+    fs.copyFile(ori_, args[1], (err) => {
+      if(err){
+        success = false;
+        console.error(err);
+      }
+    });
+    return success;
+  }
+
   /**
    * 开机启动-开启
    */
