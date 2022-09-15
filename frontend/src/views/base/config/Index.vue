@@ -23,8 +23,12 @@
         <a-input-number v-model="threads" :min="1" :max="100" style="width:60px"/></span>
         <span>送信间隔
         <a-input-number v-model="interval" :min="0" :max="100" style="width:60px"/>s</span>
+        <span>爬虫超时
+        <a-input-number v-model="target_info.timeout" :min="0" style="width:80px"/>s</span>
         <span>单独导出报告
-        <a-switch @change="seperateChange" /></span>
+        <a-switch v-model="seperate_report" /></span>
+        <span>人工输入
+        <a-switch v-model="human_login" /></span>
       </a-space>
     </div>
 
@@ -230,6 +234,7 @@ export default {
       schema: "https://",
       noAuth: true,
       seperate_report: false,
+      human_login: true,
       target_info: {
         url: "",
         username: "",
@@ -238,7 +243,9 @@ export default {
         modules: [],
         threads: 8,
         interval: 0,
-        seperate_report_flag: ""
+        timeout: 18000,
+        seperate_report_flag: "",
+        human_login_flag:""
       },
       threads: 8,
       interval: 0,
@@ -285,10 +292,6 @@ export default {
       console.log(`a-switch to ${checked}`);
       this.csvFlag = checked;
     },
-    seperateChange(checked) {
-      console.log(`a-switch to ${checked}`);
-      this.seperate_report = checked;
-    },
     smsAllCheck(checked) {
       this.sms_state = checked ? smsVul : [];
     },
@@ -332,6 +335,11 @@ export default {
         this.target_info.seperate_report_flag = "true";
       }else{
         this.target_info.seperate_report_flag = "";
+      }
+      if (this.human_login == true ){
+        this.target_info.human_login_flag = "true";
+      }else{
+        this.target_info.human_login_flag = "";
       }
       console.log("Save url: ,", this.target_info.url);
       this.target_info.modules = [];
