@@ -22,7 +22,8 @@ const vulOptions = {
     '文件上传漏洞': ['FILE_UPLOAD'],
     '越权漏洞': ['OVER_PERMISSION'],
     '未授权访问': ['UNAUTHORIZED_ACCESS'],
-    '重放': ['LOGIN_REPEAT']
+    '重放': ['LOGIN_REPEAT'],
+    '用户密码重置':['FORGET_PWD_ATTACK']
 }
 
 export {
