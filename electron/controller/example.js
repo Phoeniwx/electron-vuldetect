@@ -511,7 +511,7 @@ class ExampleController extends Controller {
     let folderPath = path.join(Utils.getExtraResourcesDir(), p);
     this.app.logger.info('[openFolder] Path: ', folderPath);
     if (!fs.existsSync(folderPath)) {
-      return false;
+      fs.mkdirSync(folderPath);
     }
     shell.showItemInFolder(folderPath);
     return true;
@@ -534,19 +534,30 @@ class ExampleController extends Controller {
         continue;
       }
       if (i.startsWith('~')) {continue;}
+      if (!i.endsWith("docx")) {continue;}
       if (fs.statSync(dirPath_+"\\"+i).isDirectory()){continue;}//如果是目录也不处理
-      var tmp = i.split("_",2)
-      var url = tmp[0]
-      var date = tmp[1].split(".",1)[0]
+      var tmp = i.split("_");
+      // this.app.logger.info(tmp);
+      var url = tmp[0];
+      var date = tmp[1].split(".",1)[0];
+      // this.app.logger.info(date);
       const dateAry = date.split('');
       dateAry[10] = 'T';
       dateAry[13] = ':';
       dateAry[16] = ':';
       date = dateAry.join('');
+      var vul_name = "";
+      if (tmp.length>2) {
+        var last = tmp[tmp.length-1];
+        if (last.indexOf("vul") == -1) {
+          vul_name = last.split('.')[0];
+        }
+      }
       var out={
         "url": url,
         "reportName": path.join(dirPath_,i),
-        "date": date
+        "date": date,
+        "vulName": vul_name
       }
       res.push(out)
     }
@@ -667,7 +678,7 @@ class ExampleController extends Controller {
    */
   async uploadFile() {
     // const self = this;
-    // const { ctx, service } = this;
+    // const { ctx, service } = this;2
     // let tmpDir = Utils.getLogDir();
     // const file = ctx.request.files[0];
 

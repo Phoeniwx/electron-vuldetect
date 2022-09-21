@@ -17,7 +17,7 @@
           <a-table :columns="reportCols" :data-source="getData(urlInfo)">
             <template slot="vul" slot-scope="text, record, index">
               <span v-if="text!=''">
-                <a @click="() => openReport(text, index)">点击查看</a>
+                <a @click="() => openReport(text, index)">{{ record.vulName }}</a>
               </span>
               <span v-else>无</span>
             </template>
@@ -35,7 +35,11 @@ import { ipcApiRoute } from '@/api/main'
 //     date1: {
 //       vul: xxx.docx,
 //       notVul: xxx.docx,
-//     },
+//       standalone: {
+//        vul1: {vul:, notVul:},
+//        vul2: {vul:, notVul:}
+//      }
+//    },
 //     date2: {
 //       vul: xxx.docx,
 //       notVul: xxx.docx,
@@ -107,35 +111,73 @@ export default {
         const url = r_obj.url;
         const reportName = r_obj.reportName;
         const date = r_obj.date;
+        const vulName = r_obj.vulName;
         let isVul = reportName.indexOf('not_vul')==-1;
-        if (rlist && url in rlist) {
-          if (rlist[url] && date in rlist[url]) {
-            rlist[url][date][isVul?'vul':'notVul'] = reportName;
+        if (vulName.length==0) {
+          if (rlist && url in rlist) {
+            if (rlist[url] && date in rlist[url]) {
+              rlist[url][date][isVul?'vul':'notVul'] = reportName;
+            } else {
+              rlist[url][date] = {'standalone':{}};
+              rlist[url][date][isVul?'vul':'notVul'] = reportName;
+            }
           } else {
-            rlist[url][date] = {};
+            rlist[url] = {};
+            rlist[url][date] = {'standalone':{}};
             rlist[url][date][isVul?'vul':'notVul'] = reportName;
           }
         } else {
-          rlist[url] = {};
-          rlist[url][date] = {};
-          rlist[url][date][isVul?'vul':'notVul'] = reportName;
+          if (rlist && url in rlist && rlist[url]) {
+            if (! (date in rlist[url])) {
+              rlist[url][date] = {'standalone':{}};
+            }
+            if (! (vulName in rlist[url][date]['standalone'])) {
+              rlist[url][date]['standalone'][vulName] = {};
+            }
+            const vul = rlist[url][date]['standalone'][vulName];
+            vul[isVul?'vul':'notVul'] = reportName;
+            
+          } else {
+            rlist[url] = {};
+            rlist[url][date] = {'standalone':{}};
+            rlist[url][date]['standalone'][vulName] = {};
+            const vul = rlist[url][date]['standalone'][vulName];
+            vul[isVul?'vul':'notVul'] = reportName;
+          }
         }
+        
       }
     },
     getData(urlInfo) {
       let res = [];
-        //console.log(JSON.stringify(urlInfo));
-        for (const date in urlInfo) {
-          const reports = urlInfo[date];
+      // this.$message.info(JSON.stringify(urlInfo));
+      //console.log(JSON.stringify(urlInfo));
+      for (const date in urlInfo) {
+        const reports = urlInfo[date];
+        if ('vul' in reports || 'notVul' in reports) {
           res.push({
             date: date,
             vul: 'vul' in reports? reports.vul : '',
             notVul: 'notVul' in reports? reports.notVul : '',
-          })
-          
+            vulName: '综合报告'
+          });
         }
-        console.log(JSON.stringify(res));
-        return res;
+        
+        if (reports['standalone']) {
+          for (const vulName in reports['standalone']) {
+            const vulr = reports['standalone'][vulName];
+            res.push({
+              date: date,
+              vul: 'vul' in vulr? vulr.vul : '',
+              notVul: 'notVul' in vulr? vulr.notVul : '',
+              vulName: vulName
+            });
+          }
+        }
+        
+      }
+      console.log(JSON.stringify(res));
+      return res;
     },
     renderVul(path, row, index) {
       return <a href="javascript:;" >点击查看</a>;
