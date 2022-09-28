@@ -24,7 +24,9 @@
         <span>送信间隔
         <a-input-number v-model="interval" :min="0" :max="100" style="width:60px"/>s</span>
         <span>爬虫超时
-        <a-input-number v-model="target_info.timeout" :min="0" style="width:80px"/>s</span>
+        <a-input-number v-model="target_info.timeout" :min="0" style="width:80px" :disabled="!timeout"/>s</span>
+        <span>开启爬虫超时
+        <a-switch v-model="timeout" /></span>
         <span>单独导出报告
         <a-switch v-model="seperate_report" /></span>
         <span>人工输入
@@ -236,6 +238,7 @@ export default {
       noAuth: true,
       seperate_report: false,
       human_login: true,
+      timeout: true,
       target_info: {
         url: "",
         username: "",
@@ -341,6 +344,9 @@ export default {
         this.target_info.human_login_flag = "true";
       }else{
         this.target_info.human_login_flag = "";
+      }
+      if (this.timeout != true){
+        this.target_info.timeout = -1;
       }
       console.log("Save url: ,", this.target_info.url);
       this.target_info.modules = [];
