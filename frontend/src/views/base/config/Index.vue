@@ -238,7 +238,7 @@ export default {
       noAuth: true,
       seperate_report: false,
       human_login: true,
-      timeout: true,
+      timeout: false,
       target_info: {
         url: "",
         username: "",
@@ -325,13 +325,17 @@ export default {
       });
     },
     saveConfig() {
-      if (this.url == "" && this.csvFlag == false) {
-        this.$message.error("请输入目标网址");
+      if (this.url == "" && (this.csvFlag == false || this.csv_file == "")) {
+        this.$message.error("请输入目标网址或CSV文件");
         return;
       }
       this.target_info.threads = this.threads;
       this.target_info.interval = this.interval;
-      this.target_info.csv_file = this.csv_file;
+      if(this.csvFlag != false){
+        this.target_info.csv_file = this.csv_file;
+      }else{
+        this.target_info.csv_file = "";
+      }
       this.target_info.url = httpRegx.test(this.url)
         ? this.url
         : this.schema + this.url;
