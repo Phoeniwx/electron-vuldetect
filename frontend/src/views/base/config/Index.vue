@@ -14,6 +14,24 @@
             <a-select-option value="https://"> Https:// </a-select-option>
           </a-select>
         </a-input>
+        <span>浏览器</span>
+        <a-select
+          v-model="browser"
+          default-value="FireFox"
+          style="width: 90px"
+        >
+          <a-select-option value="FireFox"> FireFox </a-select-option>
+          <a-select-option value="Chrome"> Chrome </a-select-option>
+        </a-select>
+        <span>浏览器宽高
+        <a-input
+          v-model="view_w"
+          style="width: 40px"
+        ></a-input>
+        <a-input
+          v-model="view_h"
+          style="width: 40px"
+        ></a-input>px</span>
       </a-space>
     </div>
 
@@ -235,12 +253,17 @@ export default {
       form: this.$form.createForm(this, { name: "horizontal_login" }),
       url: "",
       schema: "https://",
+      browser: "FireFox",
+      view_w: 0,
+      view_h: 0,
       noAuth: true,
       seperate_report: false,
       human_login: true,
       timeout: false,
       target_info: {
         url: "",
+        browser: 0,
+        viewport: {},
         username: "",
         password: "",
         csv_file: "",
@@ -328,6 +351,16 @@ export default {
       if (this.url == "" && (this.csvFlag == false || this.csv_file == "")) {
         this.$message.error("请输入目标网址或CSV文件");
         return;
+      }
+      if(this.browser == "Chrome"){
+        this.target_info.browser = 1;
+      }else{
+        this.target_info.browser = 0;
+      }
+      if(this.view_w > 0 && this.view_h > 0){
+        this.target_info.viewport = {"width": parseInt(this.view_w), "height": parseInt(this.view_h)};
+      }else{
+        this.target_info.viewport = {};
       }
       this.target_info.threads = this.threads;
       this.target_info.interval = this.interval;
